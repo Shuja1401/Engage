@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Methodology — Engage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="wordmark">ENGAGE</div>
+      <nav class="site-nav">
+        <a href="index.html" class="nav-pill">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.4"/><rect x="8" y="1" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.4"/><rect x="1" y="8" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.4"/><rect x="8" y="8" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.4"/></svg>
+          Home
+        </a>
+        <a href="methodology.html" class="nav-pill active">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.4"/><path d="M7 4v3.5l2 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          Methodology
+        </a>
+        <a href="about.html" class="nav-pill">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="5" r="2" stroke="currentColor" stroke-width="1.4"/><path d="M2.5 12c0-2.485 2.015-4.5 4.5-4.5s4.5 2.015 4.5 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          About Engage
+        </a>
+      </nav>
+      <div class="last-updated">Last updated 16 June 2026</div>
+    </div>
+  </header>
+
+  <div class="page-content">
+    <h1>Methodology</h1>
+    <p class="page-sub">How Engage collects, cleans, and analyses YouTube data — and the choices behind every metric.</p>
+
+    <h2>Channel universe</h2>
+    <p>Engage tracks 21 English-language news channels across three segments. Segments are kept separate throughout all analysis: a television channel is never benchmarked against a digital-native outlet. The segmentation reflects fundamentally different production capacities, distribution histories, and audience expectations.</p>
+    <ul>
+      <li><strong>Television (7):</strong> Times Now, Republic TV, NDTV, CNN-News18, India Today TV, Mirror Now, NewsX</li>
+      <li><strong>Print (7):</strong> Hindustan Times, The Telegraph, Times of India, Indian Express, The Tribune, The Hindu, New Indian Express</li>
+      <li><strong>Web-only (7):</strong> The Wire, The Quint, The Print, NewsLaundry, Oneindia English, The News Minute, Scroll.in</li>
+    </ul>
+
+    <h2>Data collection</h2>
+    <p>Videos are fetched via the YouTube Data API v3 using the uploads playlist method (channel ID prefix <code>UC→UU</code>). The fetch window runs from 30 days prior to the previous day at 12:00 IST. A 24-hour gestation period is applied: no video enters analysis until at least 24 hours after publication. This normalises the early-burst advantage that recently published videos would otherwise hold.</p>
+    <p>Snapshots of view, like, and comment counts are stored daily. Ratios are always re-derived at query time from summed raw components — per-video ratios are never averaged.</p>
+
+    <h2>Content type classification</h2>
+    <p>Every video is classified into one of five types based on duration. The order of the conditional chain is fixed:</p>
+    <table class="content-type-table">
+      <thead>
+        <tr><th>Type</th><th>Condition</th><th>Included in charts?</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>live_or_premiere</td><td>Duration = 0 seconds</td><td>No — excluded</td></tr>
+        <tr><td>short</td><td>Duration ≤ 60 seconds</td><td>Yes</td></tr>
+        <tr><td>broadcast_archive</td><td>Duration > 14,400 seconds (4 hrs)</td><td>No — excluded</td></tr>
+        <tr><td>livestream</td><td>Duration > 3,600 seconds (1 hr)</td><td>Yes</td></tr>
+        <tr><td>regular</td><td>Everything else (61s – 3,600s)</td><td>Yes</td></tr>
+      </tbody>
+    </table>
+    <p><code>broadcast_archive</code> and <code>live_or_premiere</code> are excluded from all performance charts. They represent bulk content dumps rather than discrete editorial decisions, and including them would distort engagement and volume metrics.</p>
+
+    <h2>Engagement score</h2>
+    <p>The engagement score measures audience response relative to reach. It weights likes more heavily than comments, because comment sections on Indian news channels contain a high proportion of noise (bot activity, repetitive political statements).</p>
+    <div class="formula-chip" style="margin-bottom:1rem;">
+      Engagement score = <strong>(Likes × 3.0 + Comments × 1.0) ÷ Views</strong>
+    </div>
+    <p>The score is computed by summing raw components across all videos in a group first, then dividing — never by averaging per-video scores. This prevents low-view videos from distorting the channel-level figure.</p>
+
+    <h2>Editorial effort</h2>
+    <p>Editorial effort is a composite score that captures both the volume and total duration of videos published. It serves as a proxy for production investment. Channels are ranked within their own segment — a digital outlet's editorial effort score is not comparable to a television channel's.</p>
+
+    <h2>Views per hour (VPH)</h2>
+    <p>VPH normalises views against the age of the video at the time of snapshot capture. It answers a more honest question than raw views: how quickly is this video accumulating attention? It is the primary metric for identifying breakout content regardless of when in the month it was published.</p>
+
+    <h2>Shelf life</h2>
+    <p>Shelf life is a retrospective metric calculated monthly. It is defined as the number of days a video takes to accumulate 80% of its total 30-day view count. Only videos with more than 1,000 views and at least 30 days of snapshot data are included. A short shelf life indicates breaking-news content; a long shelf life suggests evergreen value.</p>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span class="footer-brand">ENGAGE</span>
+      <span class="footer-note">Data fetched daily via YouTube Data API v3. Videos enter analysis 24 hours after publication. Fetch window: 30 days prior to yesterday 12:00 IST. Content types <em>broadcast_archive</em> and <em>live_or_premiere</em> excluded from all charts.</span>
+    </div>
+  </footer>
+
+</body>
+</html>
