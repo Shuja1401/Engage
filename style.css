@@ -197,12 +197,17 @@ body {
   width: 100%;
 }
 
-.dw-embed + .dw-embed {
-  margin-top: 0.75rem;
+/* Contextual top margin applied strictly when layout demands stacked elements inside one block */
+.chart-section .dw-embed + .dw-embed {
+  margin-top: 1.5rem;
 }	
 
+.dw-embed .dw-placeholder {
+  min-height: 500px; /* Synchronized structural baseline fallback */
+}
+
 .dw-embed.tall .dw-placeholder {
-  min-height: 340px;
+  min-height: 680px; /* Increased to fully clear dynamic table components */
 }
 
 .dw-embed.mini .dw-placeholder {
@@ -211,10 +216,13 @@ body {
 }
 
 .dw-embed iframe {
-    width: 100%;
-    border: none;
-    display: block;
-    height: 100% !important;
+  width: 100%;
+  border: none;
+  display: block;
+}
+
+.dw-embed.tall iframe {
+  height: 680px !important;
 }
 
 /* ===================== FORMULA CHIP ===================== */
