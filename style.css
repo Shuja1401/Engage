@@ -262,12 +262,7 @@ body {
 
 /* ===================== LEADERBOARD ===================== */
 .leaderboard-col {
-  position: sticky;
-  top: 56px;
-  max-height: calc(100vh - 56px - 2rem);
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--rule) transparent;
+  overflow: visible;
 }
 
 .leaderboard-card {
