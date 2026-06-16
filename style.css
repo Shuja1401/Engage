@@ -195,34 +195,20 @@ body {
 .dw-embed {
   margin-top: 1rem;
   width: 100%;
+  position: relative;
 }
 
-/* Contextual top margin applied strictly when layout demands stacked elements inside one block */
+/* Proper spacing rules when embedding multiple charts in a row */
 .chart-section .dw-embed + .dw-embed {
   margin-top: 1.5rem;
 }	
-
-.dw-embed .dw-placeholder {
-  min-height: 500px; /* Synchronized structural baseline fallback */
-}
-
-.dw-embed.tall .dw-placeholder {
-  min-height: 680px; /* Increased to fully clear dynamic table components */
-}
-
-.dw-embed.mini .dw-placeholder {
-  min-height: 120px;
-  padding: 1rem 0.75rem;
-}
 
 .dw-embed iframe {
   width: 100%;
   border: none;
   display: block;
-}
-
-.dw-embed.tall iframe {
-  height: 680px !important;
+  /* Let Datawrapper's script drive height values programmatically */
+  height: auto; 
 }
 
 /* ===================== FORMULA CHIP ===================== */
