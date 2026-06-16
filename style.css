@@ -203,56 +203,14 @@ body {
   margin-top: 1.5rem;
 }	
 
+/* Safety display for charts that are failing to trigger the script height */
 .dw-embed iframe {
-  width: 100%;
+  min-height: 450px; /* Forces a baseline visibility so they never collapse to 0px */
+  width: 100% !important;
   border: none;
   display: block;
-  /* Let Datawrapper's script drive height values programmatically */
-  height: auto; 
-}
-
-/* ===================== FORMULA CHIP ===================== */
-.formula-chip {
-  display: inline-block;
-  background: var(--ink);
-  color: #fff;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  font-family: var(--font-display);
-  font-size: 0.78rem;
-  margin: 0.5rem 0 1rem;
-  line-height: 1.5;
-}
-
-.formula-chip strong {
-  font-weight: 700;
-}
-
-/* ===================== LEGEND ===================== */
-.legend-row {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 0.75rem;
-  flex-wrap: wrap;
-}
-
-.legend-dot {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-
-.legend-dot.print { background: var(--print); }
-.legend-dot.web   { background: var(--web); }
-.legend-dot.tv    { background: var(--tv); }
-
-.legend-text {
-  font-size: 0.75rem;
-  color: var(--muted);
-  font-family: var(--font-display);
-  margin-left: -0.6rem;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 /* ===================== LEADERBOARD ===================== */
