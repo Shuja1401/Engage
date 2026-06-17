@@ -34,7 +34,10 @@
 
   <section class="hero">
     <div class="container">
-      <p class="hero-text">ENGAGE tracks the YouTube performance of leading Indian news publishers across television, print and digital-native brands. Updated daily, it monitors publishing activity, audience engagement and content performance to identify patterns shaping the news ecosystem. The platform is designed to help editors, journalists and media professionals understand how competitors are publishing, what audiences are consuming and where engagement is being generated. All metrics are calculated from publicly available YouTube data and are intended to provide a comparative view of the Indian news video landscape.</p>
+      <p class="hero-text">ENGAGE tracks the YouTube performance of leading Indian news publishers across television, print and digital-native brands.
+        Updated daily, it monitors publishing activity, audience engagement and content performance to identify patterns shaping the news ecosystem.
+        The platform is designed to help editors, journalists and media professionals understand how competitors are publishing, what audiences are consuming and where engagement is being generated.
+        All metrics are calculated from publicly available YouTube data and are intended to provide a comparative view of the Indian news video landscape.</p>
     </div>
   </section>
 
@@ -43,10 +46,8 @@
     <div class="charts-col">
 
       <section class="chart-section" id="when-to-publish">
-        <div class="section-label">Publishing patterns</div>
-        <h2 class="section-title">When to publish?</h2>
-        <p class="section-desc">Share (in %) of videos published at each hour of the day by channel group.</p>
-        <div class="data-note">Data is for videos published in the previous 30 days.</div>
+        <h2 class="section-title">When are news channels publishing?</h2>
+        <p class="section-desc">This chart shows the share of videos published during each hour of the day across different channel groups.</p>
         <div class="dw-embed" data-chart="when-to-publish">
           <div class="dw-placeholder">
             <span class="dw-url">
@@ -65,10 +66,8 @@
       </section>
 
       <section class="chart-section" id="how-many-videos">
-        <div class="section-label">Volume</div>
-        <h2 class="section-title">How many videos are being published?</h2>
-        <p class="section-desc">Number of videos being published by each channel per active day.*</p>
-        <div class="data-note">* Proxy for days on which a channel published at least one video. Data for videos published in the previous 30 days.</div>
+        <h2 class="section-title">How many videos are being published every day?</h2>
+        <p class="section-desc">This chart compares the average number of videos published per day by each channel in the previous 30 days. It provides a view of editorial output and highlights which publishers are pursuing high-frequency publishing strategies versus more selective approaches.</p>
         <div class="dw-embed" data-chart="how-many-videos">
           <div class="dw-placeholder">
             <span class="dw-url">
@@ -87,9 +86,8 @@
       </section>
 
       <section class="chart-section" id="duration">
-        <div class="section-label">Content format</div>
-        <h2 class="section-title">What is the duration of videos being published?</h2>
-        <p class="section-desc">Share (in %) of videos published by each category by duration group.</p>
+        <h2 class="section-title">What type of videos are being published?</h2>
+        <p class="section-desc">This chart groups videos into five content formats based on their duration and publishing type: short, regular, live-stream, live or premiere, and broadcast archive.</p>
         <div class="dw-embed" data-chart="duration-distribution">
           <div class="dw-placeholder">
             <span class="dw-url">
@@ -108,9 +106,8 @@
       </section>
 
       <section class="chart-section" id="engagement">
-        <div class="section-label">Engagement</div>
-        <h2 class="section-title">Engagement score</h2>
-        <p class="section-desc">Engagement score measures the ability of a video to engage its audience using comments and likes.</p>
+        <h2 class="section-title">How Engaged Is the Audience?</h2>
+        <p class="section-desc">The Engagement Score measures a channel's ability to generate audience interaction through likes and comments. To ensure a fair comparison, the score is normalised for views, allowing channels of different sizes to be evaluated on the same scale.</p>
         <div class="formula-chip">
           Engagement score = <strong>(Likes × 3.0 + Comments × 1.0) ÷ Views</strong>
         </div>
@@ -129,13 +126,16 @@
             </span>
           </div>
         </div>
-        <div class="data-note">Score is for videos published in the previous 30 days.</div>
       </section>
 
       <section class="chart-section" id="editorial-effort">
-        <div class="section-label">Editorial effort</div>
-        <h2 class="section-title">Editorial effort</h2>
-        <p class="section-desc">Editorial effort captures the number and duration of videos into a composite score to capture the production effort. The performance of channels within their respective group.</p>
+        <h2 class="section-title">How Much Content Is Being Produced?</h2>
+        <p class="section-desc">Editorial effort is a composite score that captures two dimensions of a channel's content production activity: how many videos it publishes, and the total runtime of those videos. Each dimension is standardised (z-scored) within its segment — TV, Print, or Web-only — and the two scores are added together to produce the final index.
+
+Scoring is calculated separately for each segment to ensure that editorial effort is measured against peers, not against structurally different operations.
+
+Within each segment, a score of zero means a channel is publishing exactly at its peer group's average — in both volume and total runtime. A positive score means it is outpacing its peers on at least one dimension; a negative score means it is publishing less, or shorter content, or both, relative to what's typical for its category.
+</p>
         <div class="dw-embed" data-chart="editorial-tv">
           <div class="dw-placeholder">
             <span class="dw-url">
@@ -181,13 +181,14 @@
             </span>
           </div>
         </div>
-        <div class="data-note">Data for videos published in the previous 30 days.</div>
       </section>
 
       <section class="chart-section" id="volume-vs-vph">
-        <div class="section-label">Output vs. return</div>
-        <h2 class="section-title">Volume vs Views per hour</h2>
-        <p class="section-desc">Editorial effort compares volume and views per hour to convert volume into views. Channels that do more with less.</p>
+        <h2 class="section-title">Publishing Volume vs Views per Hour</h2>
+        <p class="section-desc">This chart compares a channel's publishing volume with the average views generated per hour by its videos.
+
+Each coloured-dot represents a channel in a different group. Channels further to the right publish more videos, while channels higher on the chart generate more views per hour.
+</p>
         <div class="legend-row">
           <span class="legend-dot print"></span><span class="legend-text">Print</span>
           <span class="legend-dot web"></span><span class="legend-text">Web-only</span>
@@ -208,13 +209,14 @@
             </span>
           </div>
         </div>
-        <div class="data-note">Source is for videos published in the previous 30 days.</div>
       </section>
 
       <section class="chart-section" id="effort-vs-engagement">
-        <div class="section-label">Efficiency</div>
-        <h2 class="section-title">Effort vs Engagement</h2>
-        <p class="section-desc">This chart shows if channels are able to strike a balance between their editorial effort and engagement score.</p>
+        <h2 class="section-title">Editorial Effort vs Audience Engagement</h2>
+        <p class="section-desc">This chart compares a channel's editorial output with its ability to engage audiences.
+
+X-axis shows Editorial Effort, a standardised measure of content production based on publishing volume and total hours of content produced. The Y-axis shows Engagement Score, which measures audience interaction through likes and comments normalised for views. Together, the two metrics provide a comparative view of how audience engagement varies across different levels of editorial output.
+</p>
         <div class="legend-row">
           <span class="legend-dot print"></span><span class="legend-text">Print</span>
           <span class="legend-dot web"></span><span class="legend-text">Web-only</span>
@@ -238,10 +240,8 @@
       </section>
 
       <section class="chart-section" id="shelf-life">
-        <div class="section-label">Longevity</div>
         <h2 class="section-title">Shelf life</h2>
-        <p class="section-desc">Shelf life of a video. This will be calculated only for videos with more than 1000 views and 30 days of data. The shelf life of a video is defined as the number of days taken by it to accumulate 80% of the total views in the last 30 days.</p>
-        <div class="data-note shelf-note">Shelf life of a video. This will be calculated only for videos with more than 1000 views and 30 days of data. The shelf life of a video is defined as the number of days taken by it to accumulate 80% of the total views in the last 30 days.</div>
+        <p class="section-desc">UPCOMING</p>
         <div class="dw-embed" data-chart="shelf-life">
           <div class="dw-placeholder">
             <span class="dw-url">
@@ -368,7 +368,7 @@
 <footer class="site-footer">
     <div class="container footer-inner">
       <span class="footer-brand">ENGAGE</span>
-      <span class="footer-note">Data fetched daily via YouTube Data API v3. Videos enter analysis 24 hours after publication. Fetch window: 30 days prior to yesterday 12:00 IST. Content types <em>broadcast_archive</em> and <em>live_or_premiere</em> excluded from all charts.</span>
+      <span class="footer-note">Designed with AI. Data fetched daily via YouTube Data API v3. Videos enter analysis 24 hours after publication. Fetch window: 30 days prior to yesterday 12:00 IST. Content types <em>broadcast_archive</em> and <em>live_or_premiere</em> excluded from all charts.</span>
     </div>
   </footer>
 
