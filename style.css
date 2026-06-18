@@ -145,6 +145,9 @@ body {
   color: var(--muted);
   line-height: 1.7;
 }
+.engage-highlight {
+    color: var(--accent-color);
+}
 
 /* ===================== CHART SECTIONS ===================== */
 .chart-section {
