@@ -143,7 +143,6 @@ body {
 .hero-text {
   font-size: 0.875rem;
   color: var(--muted);
-  max-width: 700px;
   line-height: 1.7;
 }
 
@@ -180,7 +179,6 @@ body {
   font-size: 0.825rem;
   color: var(--muted);
   margin-bottom: 0.75rem;
-  max-width: 560px;
   line-height: 1.65;
 }
 
