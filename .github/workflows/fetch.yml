@@ -20,7 +20,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install psycopg2-binary google-api-python-client
+          pip install psycopg2-binary google-api-python-client pandas
 
       - name: Run fetch
         env:
