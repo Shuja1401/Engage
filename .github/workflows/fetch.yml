@@ -1,0 +1,34 @@
+name: Daily Fetch
+
+on:
+  schedule:
+    - cron: '30 6 * * *'  # 12:00 PM IST (UTC+5:30)
+  workflow_dispatch:       # allow manual trigger
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install psycopg2-binary google-api-python-client
+
+      - name: Run fetch
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          NEON_CONNECTION_STRING: ${{ secrets.NEON_CONNECTION_STRING }}
+        run: python pipeline/fetch.py
+
+      - name: Run validation
+        env:
+          NEON_CONNECTION_STRING: ${{ secrets.NEON_CONNECTION_STRING }}
+        run: python pipeline/validation.py
