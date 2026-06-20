@@ -1,0 +1,32 @@
+name: Daily Analytics
+
+on:
+  workflow_run:
+    workflows: ["Daily Fetch"]
+    types:
+      - completed
+  workflow_dispatch:       # allow manual trigger
+
+jobs:
+  analytics:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install psycopg2-binary gspread google-auth pandas openpyxl
+
+      - name: Run analytics
+        env:
+          NEON_CONNECTION_STRING: ${{ secrets.NEON_CONNECTION_STRING }}
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+        run: python pipeline/analytics.py
