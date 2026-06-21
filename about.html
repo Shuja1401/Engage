@@ -39,14 +39,23 @@
 
   <div class="page-content">
     <h2>What this is</h2>
-    <p>Engage is a competitive intelligence tool for news organisations and editorial strategy teams. It tracks 21 English-language Indian news channels — television, print-origin, and digital-native — and surfaces normalised, methodology-driven signals from their YouTube output.</p>
-    <p>Raw view counts answer the wrong question. Engage asks: how efficiently is each channel converting editorial effort into audience engagement? Which content formats hold attention beyond the 24-hour news cycle? Who is doing more with less?</p>
+    <p>Engage tracks production patterns and engagement metrics of YouTube channels of 21 English-language news outlets, which are divided across three segments: print, television and web-only.</p>
+    <p>The tracker takes snapshots of videos at 12 pm every day, collecting data on publishing time, duration of videos, engagement metrics (views, like and comments). The project captured its first snapshot on 5 June 2026 , and included videos published in the previous 30 days (since 4 May 2026). The tracker continues to operate on a rolling 30-day window.</p>
+    <p>The video-level data is analyzed for categorization and calculation of derived metrics. These include Editorial Effort, a composite score which combines number of videos published and their duration, Engagement Score, a measure of audience response relative to reach, and Views per Hour.</p>
+    <p>The analysis is presented on Engage homepage using a series of interactive charts showing how different groups (web-only, tv, print) behave and a channel's performance within these peer groups. Each chart considers videos published in a 30-day window with a lag of 24 hours allowing metrics to stabilise before they are included for analysis.</p>
 
     <h2>Who it's for</h2>
-    <p>Editors, digital heads, and strategy teams at news organisations who want to understand their competitive position on YouTube without wading through raw platform data.</p>
+    <p>The tracker is meant to inform business and operations heads, editors, reporters and content producers inside English newsrooms to help them frame an informed YouTube content strategy.  The tracker helps answer operational and editorial questions such as:</p>
+    <ul>
+    	<li>when to publish,</li>
+    	<li>how much to publish,</li>
+    	<li>which publishers outperform their peers,</li>
+    	<li>which publishing patterns correlate with stronger engagement, and</li>
+    	<li>how production effort relates to audience outcomes.</li>
+    </ul>
 
     <h2>What it is not</h2>
-    <p>Engage does not rank channels by raw size. A television channel with millions of subscribers will not appear on the same leaderboard as a digital-native outlet with a fraction of that following. The three segments — Television, Print, Web-only — are kept separate throughout all analysis.</p>
+    <p>Due to the limited information available via YouTube APIs, the tracker cannot be used to measure the performance of individual videos. It can only be used for a comparative analysis of a channel's performance within its peer group. A cross-comparison of channels across the peer groups are not methodologically valid, as these groups have different editorial and distribution strategy.</p>
 
     <h2>Built by</h2>
     <p>Engage is a portfolio project built at the intersection of data journalism, editorial judgment, and data engineering. The data pipeline runs daily on the YouTube Data API v3. Analysis is produced in Python. Visualisations are served via Datawrapper.</p>
