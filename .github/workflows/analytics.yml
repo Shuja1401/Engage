@@ -30,3 +30,15 @@ jobs:
           NEON_CONNECTION_STRING: ${{ secrets.NEON_CONNECTION_STRING }}
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
         run: python pipeline/analytics.py
+      - name: Update last updated date
+        run: |
+          DATE=$(TZ='Asia/Kolkata' date '+%-d %B %Y')
+          sed -i "s|Last updated [0-9]* [A-Za-z]* [0-9]*|Last updated $DATE|" index.html
+
+      - name: Commit updated date
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "chore: update last updated date [skip ci]"
+          git push
