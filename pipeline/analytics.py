@@ -246,6 +246,7 @@ def run_analytics():
             c.name,
             c.category,
             v.duration_bucket,
+            COUNT(v.video_id) as total_videos,
             SUM(v.views) AS total_views,
             ROUND(100.0 * SUM(v.views) / SUM(SUM(v.views)) OVER (PARTITION BY c.name), 2) AS pct_views,
             ROUND(100.0 * COUNT(v.video_id) / SUM(COUNT(v.videos)) OVER (PARTITION BY c.name), 2) AS pct_videos
@@ -272,6 +273,7 @@ def run_analytics():
         SELECT
             c.category,
             v.duration_bucket,
+            COUNT(v.video_id) as total_videos,
             SUM(v.views) AS total_views,
             ROUND(100.0 * SUM(v.views) / SUM(SUM(v.views)) OVER (PARTITION BY c.category), 2) AS pct_views,
             ROUND(100.0 * COUNT(v.video_id) / SUM(COUNT(v.video_id)) OVER (PARTITION BY c.category), 2) AS pct_videos
