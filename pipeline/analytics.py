@@ -241,6 +241,41 @@ def run_analytics():
     conn.close()
     print(f"✓ analytics.py completed at {datetime.now().strftime('%d %b %Y, %I:%M %p')}")
 
+    # 11. Views distribution by duration_bucket per channel
+    df = run_query(conn, """
+        SELECT
+            c.name,
+            c.category,
+            v.duration_bucket,
+            SUM(v.views) AS total_views,
+            ROUND(100.0 * SUM(v.views) / SUM(SUM(v.views)) OVER (PARTITION BY c.name), 2) AS pct
+        FROM videos v
+        JOIN channels c ON v.channel_id = c.channel_id
+        WHERE v.published_at BETWEEN NOW() - INTERVAL '31 days' AND NOW() - INTERVAL '1 day'
+        AND v.content_type NOT IN ('broadcast_archive', 'live_or_premiere')
+        GROUP BY c.name, c.category, v.duration_bucket
+        ORDER BY c.category, c.name, v.duration_bucket
+    """)
+    df["category"] = df["category"].str.upper()
+    push(sh, "views_by_duration_channel", df)
+    
+    # 12. Views distribution by duration_bucket per segment
+    df = run_query(conn, """
+        SELECT
+            c.category,
+            v.duration_bucket,
+            SUM(v.views) AS total_views,
+            ROUND(100.0 * SUM(v.views) / SUM(SUM(v.views)) OVER (PARTITION BY c.category), 2) AS pct
+        FROM videos v
+        JOIN channels c ON v.channel_id = c.channel_id
+        WHERE v.published_at BETWEEN NOW() - INTERVAL '31 days' AND NOW() - INTERVAL '1 day'
+        AND v.content_type NOT IN ('broadcast_archive', 'live_or_premiere')
+        GROUP BY c.category, v.duration_bucket
+        ORDER BY c.category, v.duration_bucket
+    """)
+    df["category"] = df["category"].str.upper()
+    push(sh, "views_by_duration_segment", df)
+
 
 def run_backup():
     """Copy charts_engage → yesterday_analytics. Run manually after visual check."""
