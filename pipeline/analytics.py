@@ -247,7 +247,8 @@ def run_analytics():
             c.category,
             v.duration_bucket,
             SUM(v.views) AS total_views,
-            ROUND(100.0 * SUM(v.views) / SUM(SUM(v.views)) OVER (PARTITION BY c.name), 2) AS pct
+            ROUND(100.0 * SUM(v.views) / SUM(SUM(v.views)) OVER (PARTITION BY c.name), 2) AS pct_views,
+            ROUND(100.0 * COUNT(v.video_id) / SUM(COUNT(v.videos)) OVER (PARTITION BY c.name), 2) AS pct_videos
         FROM videos v
         JOIN channels c ON v.channel_id = c.channel_id
         WHERE v.published_at BETWEEN NOW() - INTERVAL '31 days' AND NOW() - INTERVAL '1 day'
@@ -272,7 +273,8 @@ def run_analytics():
             c.category,
             v.duration_bucket,
             SUM(v.views) AS total_views,
-            ROUND(100.0 * SUM(v.views) / SUM(SUM(v.views)) OVER (PARTITION BY c.category), 2) AS pct
+            ROUND(100.0 * SUM(v.views) / SUM(SUM(v.views)) OVER (PARTITION BY c.category), 2) AS pct_views,
+            ROUND(100.0 * COUNT(v.video_id) / SUM(COUNT(v.video_id)) OVER (PARTITION BY c.category), 2) AS pct_videos
         FROM videos v
         JOIN channels c ON v.channel_id = c.channel_id
         WHERE v.published_at BETWEEN NOW() - INTERVAL '31 days' AND NOW() - INTERVAL '1 day'
