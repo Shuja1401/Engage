@@ -67,7 +67,23 @@ def classify_content_type(duration_sec):
         return "livestream"
     else:
         return "regular"
-
+def classify_duration_bucket(duration_sec):
+    if duration_sec == 0:
+        return "live or premiere"
+    elif duration_sec <= 60:
+        return "short"
+    elif duration_sec <= 300:
+        return "1-5 min"
+    elif duration_sec <= 900:
+        return "5-15 min"
+    elif duration_sec <= 1800:
+        return "15-30 min"
+    elif duration_sec <= 3600:
+        return "30-60 min"
+    elif duration_sec <= 14400:
+        return "livestream"
+    else:
+        return "broadcast archive"
 
 def compute_views_per_hour(views, published_at):
     now       = datetime.now(timezone.utc)
@@ -143,12 +159,13 @@ def batch_upsert_videos(cur, items, channel_category):
             channel_category,
             detect_language(snippet["title"]),
             classify_content_type(duration_sec),
+            classify_duration_bucket(duration_sec),
         ))
-
     execute_values(cur, """
         INSERT INTO videos
             (video_id, channel_id, title, published_at,
-             duration_seconds, category, language, content_type)
+             duration_seconds, category, language, content_type,
+             duration_bucket)
         VALUES %s
         ON CONFLICT (video_id) DO NOTHING
     """, rows)
