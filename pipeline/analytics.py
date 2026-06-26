@@ -238,8 +238,7 @@ def run_analytics():
         ws.update([cat_df.columns.tolist()] + cat_df.values.tolist())
         time.sleep(5)
 
-    conn.close()
-    print(f"✓ analytics.py completed at {datetime.now().strftime('%d %b %Y, %I:%M %p')}")
+
 
     # 11. Views distribution by duration_bucket per channel
     df = run_query(conn, """
@@ -275,7 +274,8 @@ def run_analytics():
     """)
     df["category"] = df["category"].str.upper()
     push(sh, "views_by_duration_segment", df)
-
+conn.close()
+print(f"✓ analytics.py completed at {datetime.now().strftime('%d %b %Y, %I:%M %p')}")
 
 def run_backup():
     """Copy charts_engage → yesterday_analytics. Run manually after visual check."""
