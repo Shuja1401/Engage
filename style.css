@@ -206,7 +206,7 @@ body {
 
 /* Safety display for charts that are failing to trigger the script height */
 .dw-embed iframe {
-  min-height: 450px; /* Forces a baseline visibility so they never collapse to 0px */
+  min-height: 100px; /* Forces a baseline visibility so they never collapse to 0px */
   width: 100% !important;
   border: none;
   display: block;
