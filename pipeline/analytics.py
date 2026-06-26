@@ -252,7 +252,7 @@ def run_backup():
         "subscribers", "total_views", "Top_5_videos",
         "videos_per_day", "posting_time_of_videos", "duration_of_videos",
         "engagement_score", "vph_vs_volume", "eng_scr_vs_vol",
-        "editorial_effort_web", "editorial_effort_tv", "editorial_effort_print",
+        "editorial_effort_web", "editorial_effort_tv", "editorial_effort_print", "views_by_duration_channel", "views_by_duration_segment"
     ]
 
     for tab in tabs:
