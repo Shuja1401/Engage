@@ -243,12 +243,13 @@ def run_analytics():
     # 11. Views distribution by duration_bucket per channel
     df = run_query(conn, """
         SELECT
-            c.name,
-            c.category,
+            (c.name || '-VIEWS') AS "channel-views",
             v.duration_bucket,
-            COUNT(v.video_id) as total_videos,
             SUM(v.views) AS total_views,
             ROUND(100.0 * SUM(v.views) / SUM(SUM(v.views)) OVER (PARTITION BY c.name), 2) AS pct_views,
+            ' ' AS spacer,
+            (c.name || '-VIDEOS') AS "channel-videos",
+            COUNT(v.video_id) AS total_videos,
             ROUND(100.0 * COUNT(v.video_id) / SUM(COUNT(v.video_id)) OVER (PARTITION BY c.name), 2) AS pct_videos
         FROM videos v
         JOIN channels c ON v.channel_id = c.channel_id
@@ -256,14 +257,14 @@ def run_analytics():
         AND v.content_type NOT IN ('broadcast_archive', 'live_or_premiere')
         GROUP BY c.name, c.category, v.duration_bucket
         ORDER BY c.category, c.name,
-        CASE v.duration_bucket
-        WHEN 'livestream'  THEN 6
-        WHEN '30-60 min'   THEN 5
-        WHEN '15-30 min'   THEN 4
-        WHEN '5-15 min'    THEN 3
-        WHEN '1-5 min'     THEN 2
-        WHEN 'short'       THEN 1
-        END DESC
+            CASE v.duration_bucket
+                WHEN 'livestream'  THEN 6
+                WHEN '30-60 min'   THEN 5
+                WHEN '15-30 min'   THEN 4
+                WHEN '5-15 min'    THEN 3
+                WHEN '1-5 min'     THEN 2
+                WHEN 'short'       THEN 1
+            END DESC
     """)
     df["category"] = df["category"].str.upper()
     push(sh, "views_by_duration_channel", df)
