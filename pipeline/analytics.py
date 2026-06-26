@@ -266,7 +266,6 @@ def run_analytics():
                 WHEN 'short'       THEN 1
             END DESC
     """)
-    df["category"] = df["category"].str.upper()
     push(sh, "views_by_duration_channel", df)
     
     # 12. Views distribution by duration_bucket per segment
@@ -303,7 +302,6 @@ SELECT
         WHEN 'short'       THEN 1
     END DESC
     """)
-    df["category"] = df["category"].str.upper()
     push(sh, "views_by_duration_segment", df)
     conn.close()
     print(f"✓ analytics.py completed at {datetime.now().strftime('%d %b %Y, %I:%M %p')}")
