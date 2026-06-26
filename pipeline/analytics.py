@@ -244,11 +244,12 @@ def run_analytics():
     df = run_query(conn, """
         SELECT
             (c.name || '-VIEWS') AS "channel-views",
-            v.duration_bucket,
+            v.duration_bucket as duration_bucket_views,
             SUM(v.views) AS total_views,
             ROUND(100.0 * SUM(v.views) / SUM(SUM(v.views)) OVER (PARTITION BY c.name), 2) AS pct_views,
             ' ' AS spacer,
             (c.name || '-VIDEOS') AS "channel-videos",
+            v.duration_bucket as duration_bucket_videos,
             COUNT(v.video_id) AS total_videos,
             ROUND(100.0 * COUNT(v.video_id) / SUM(COUNT(v.video_id)) OVER (PARTITION BY c.name), 2) AS pct_videos
         FROM videos v
@@ -276,7 +277,7 @@ SELECT
         WHEN 'web-only'   THEN 'WEB-ONLY-VIEWS'
         WHEN 'television' THEN 'TELEVISION-VIEWS'
     END AS "category-views",
-    v.duration_bucket,
+    v.duration_bucket as duration_bucket_views,
     SUM(v.views) AS total_views,
     ROUND(100.0 * SUM(v.views) / SUM(SUM(v.views)) OVER (PARTITION BY c.category), 2) AS pct_views,
     ' ' AS spacer,
@@ -285,6 +286,7 @@ SELECT
         WHEN 'web-only'   THEN 'WEB-ONLY-VIDEOS'
         WHEN 'television' THEN 'TELEVISION-VIDEOS'
     END AS "category-videos",
+    v.duration_bucket as duration_bucket_videos,
     COUNT(v.video_id) AS total_videos,
     ROUND(100.0 * COUNT(v.video_id) / SUM(COUNT(v.video_id)) OVER (PARTITION BY c.category), 2) AS pct_videos
     FROM videos v
