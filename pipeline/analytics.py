@@ -253,7 +253,15 @@ def run_analytics():
         WHERE v.published_at BETWEEN NOW() - INTERVAL '31 days' AND NOW() - INTERVAL '1 day'
         AND v.content_type NOT IN ('broadcast_archive', 'live_or_premiere')
         GROUP BY c.name, c.category, v.duration_bucket
-        ORDER BY c.category, c.name, v.duration_bucket
+        ORDER BY c.category, c.name,
+        CASE v.duration_bucket
+        WHEN 'livestream'  THEN 6
+        WHEN '30-60 min'   THEN 5
+        WHEN '15-30 min'   THEN 4
+        WHEN '5-15 min'    THEN 3
+        WHEN '1-5 min'     THEN 2
+        WHEN 'short'       THEN 1
+        END DESC
     """)
     df["category"] = df["category"].str.upper()
     push(sh, "views_by_duration_channel", df)
@@ -270,7 +278,15 @@ def run_analytics():
         WHERE v.published_at BETWEEN NOW() - INTERVAL '31 days' AND NOW() - INTERVAL '1 day'
         AND v.content_type NOT IN ('broadcast_archive', 'live_or_premiere')
         GROUP BY c.category, v.duration_bucket
-        ORDER BY c.category, v.duration_bucket
+        ORDER BY c.category,
+        CASE v.duration_bucket
+        WHEN 'livestream'  THEN 6
+        WHEN '30-60 min'   THEN 5
+        WHEN '15-30 min'   THEN 4
+        WHEN '5-15 min'    THEN 3
+        WHEN '1-5 min'     THEN 2
+        WHEN 'short'       THEN 1
+        END DESC
     """)
     df["category"] = df["category"].str.upper()
     push(sh, "views_by_duration_segment", df)
