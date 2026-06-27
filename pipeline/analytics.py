@@ -245,6 +245,7 @@ def run_analytics():
     df1 = run_query(conn, """
         SELECT
             (c.name || '-views') AS "channel name",
+            c.name,
             c.category,
             v.duration_bucket as duration_bucket,
             SUM(v.views) AS total,
@@ -268,6 +269,7 @@ def run_analytics():
     df2 = run_query (conn, """
         SELECT
             (c.name || '-VIDEOS') AS "channel name",
+            c.name,
             c.category,
             v.duration_bucket as duration_bucket,
             COUNT(v.video_id) AS total,
