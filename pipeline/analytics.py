@@ -268,6 +268,7 @@ def run_analytics():
     df2 = run_query (conn, """
         SELECT
             (c.name || '-VIDEOS') AS "channel-videos",
+            c.category,
             v.duration_bucket as duration_bucket_videos,
             COUNT(v.video_id) AS total_videos,
             ROUND(100.0 * COUNT(v.video_id) / SUM(COUNT(v.video_id)) OVER (PARTITION BY c.name), 2) AS pct_videos
