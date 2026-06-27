@@ -264,7 +264,7 @@ def run_analytics():
             END DESC
     """)
 
-    df2 = (conn, """
+    df2 = run_query (conn, """
         SELECT
             (c.name || '-VIDEOS') AS "channel-videos",
             v.duration_bucket as duration_bucket_videos,
