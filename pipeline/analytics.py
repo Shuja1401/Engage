@@ -247,7 +247,7 @@ def run_analytics():
             (c.name || '-views') AS "channel name",
             c.category,
             v.duration_bucket as duration_bucket,
-            SUM(v.views) AS total_views,
+            SUM(v.views) AS total,
             ROUND(100.0 * SUM(v.views) / SUM(SUM(v.views)) OVER (PARTITION BY c.name), 2) AS pct        
         FROM videos v
         JOIN channels c ON v.channel_id = c.channel_id
@@ -267,11 +267,11 @@ def run_analytics():
 
     df2 = run_query (conn, """
         SELECT
-            (c.name || '-VIDEOS') AS "channel-videos",
+            (c.name || '-VIDEOS') AS "channel name",
             c.category,
-            v.duration_bucket as duration_bucket_videos,
-            COUNT(v.video_id) AS total_videos,
-            ROUND(100.0 * COUNT(v.video_id) / SUM(COUNT(v.video_id)) OVER (PARTITION BY c.name), 2) AS pct_videos
+            v.duration_bucket as duration_bucket,
+            COUNT(v.video_id) AS total,
+            ROUND(100.0 * COUNT(v.video_id) / SUM(COUNT(v.video_id)) OVER (PARTITION BY c.name), 2) AS pct
         FROM videos v
         JOIN channels c ON v.channel_id = c.channel_id
         WHERE v.published_at BETWEEN NOW() - INTERVAL '31 days' AND NOW() - INTERVAL '1 day'
