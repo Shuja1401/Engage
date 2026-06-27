@@ -273,9 +273,9 @@ def run_analytics():
     df1 = run_query(conn, """
         SELECT
         CASE c.category
-            WHEN 'print'      THEN 'PRINT-VIEWS'
-            WHEN 'web-only'   THEN 'WEB-ONLY-VIEWS'
-            WHEN 'television' THEN 'TELEVISION-VIEWS'
+            WHEN 'print'      THEN 'Views-print'
+            WHEN 'web-only'   THEN 'Views-web-only'
+            WHEN 'television' THEN 'Views-television'
         END AS "category-views-videos",
         c.category,
         v.duration_bucket as duration_bucket_views_videos,
@@ -300,9 +300,9 @@ def run_analytics():
     df2 = run_query(conn, """
         SELECT
         CASE c.category
-            WHEN 'print'      THEN 'PRINT-VIDEOS'
-            WHEN 'web-only'   THEN 'WEB-ONLY-VIDEOS'
-            WHEN 'television' THEN 'TELEVISION-VIDEOS'
+            WHEN 'print'      THEN 'Videos-print'
+            WHEN 'web-only'   THEN 'Videos-web-only'
+            WHEN 'television' THEN 'Videos-television'
         END AS "category-views-videos",
         c.category,
         v.duration_bucket as duration_bucket_views_videos,
