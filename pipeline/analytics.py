@@ -44,6 +44,7 @@ def push(sh, worksheet_name, df, sleep=2):
     """Clear and update a worksheet with a dataframe."""
     ws = sh.worksheet(worksheet_name)
     ws.clear()
+    df = df.fillna("")
     ws.update([df.columns.tolist()] + df.values.tolist())
     time.sleep(sleep)
 
