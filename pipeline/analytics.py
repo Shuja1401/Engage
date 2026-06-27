@@ -268,7 +268,7 @@ def run_analytics():
 
     df2 = run_query (conn, """
         SELECT
-            (c.name || '-VIDEOS') AS "channel name",
+            (c.name || '-videos') AS "channel name",
             c.name,
             c.category,
             v.duration_bucket as duration_bucket,
