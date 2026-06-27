@@ -241,13 +241,31 @@ def run_analytics():
 
 
     # 11. Views distribution by duration_bucket per channel
-    df = run_query(conn, """
+    df1 = run_query(conn, """
         SELECT
-            (c.name || '-VIEWS') AS "channel-views",
-            v.duration_bucket as duration_bucket_views,
+            (c.name || '-views') AS "channel name",
+            c.category,
+            v.duration_bucket as duration_bucket,
             SUM(v.views) AS total_views,
-            ROUND(100.0 * SUM(v.views) / SUM(SUM(v.views)) OVER (PARTITION BY c.name), 2) AS pct_views,
-            ' ' AS spacer,
+            ROUND(100.0 * SUM(v.views) / SUM(SUM(v.views)) OVER (PARTITION BY c.name), 2) AS pct        
+        FROM videos v
+        JOIN channels c ON v.channel_id = c.channel_id
+        WHERE v.published_at BETWEEN NOW() - INTERVAL '31 days' AND NOW() - INTERVAL '1 day'
+        AND v.content_type NOT IN ('broadcast_archive', 'live_or_premiere')
+        GROUP BY c.name, c.category, v.duration_bucket
+        ORDER BY c.category, c.name,
+            CASE v.duration_bucket
+                WHEN 'livestream'  THEN 6
+                WHEN '30-60 min'   THEN 5
+                WHEN '15-30 min'   THEN 4
+                WHEN '5-15 min'    THEN 3
+                WHEN '1-5 min'     THEN 2
+                WHEN 'short'       THEN 1
+            END DESC
+    """)
+
+    df2 = (conn, """
+        SELECT
             (c.name || '-VIDEOS') AS "channel-videos",
             v.duration_bucket as duration_bucket_videos,
             COUNT(v.video_id) AS total_videos,
@@ -267,6 +285,8 @@ def run_analytics():
                 WHEN 'short'       THEN 1
             END DESC
     """)
+    df=pd.concat([df1, df2], ignore_index=True)
+    df["category"] = df["category"].str.upper()
     push(sh, "views_by_duration_channel", df)
     
     # 12. Views distribution by duration_bucket per segment
