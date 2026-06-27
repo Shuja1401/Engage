@@ -296,7 +296,7 @@ def run_analytics():
         END DESC
     """)
 
-    df2 = run_query("""
+    df2 = run_query(conn, """
         SELECT
         CASE c.category
             WHEN 'print'      THEN 'PRINT-VIDEOS'
