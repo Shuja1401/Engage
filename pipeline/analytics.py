@@ -323,8 +323,8 @@ def run_analytics():
             WHEN 'short'       THEN 1
         END DESC
     """)
-    df["category"] = df["category"].str.upper()
     df=pd.concat([df1, df2], ignore_index=True)
+    df["category"] = df["category"].str.upper()
     push(sh, "views_by_duration_segment", df)
     conn.close()
     print(f"✓ analytics.py completed at {datetime.now().strftime('%d %b %Y, %I:%M %p')}")
