@@ -323,6 +323,7 @@ def run_analytics():
             WHEN 'short'       THEN 1
         END DESC
     """)
+    df.columns = df.columns.str.upper()
     df=pd.concat([df1, df2], ignore_index=True)
     push(sh, "views_by_duration_segment", df)
     conn.close()
