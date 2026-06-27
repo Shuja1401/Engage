@@ -278,7 +278,7 @@ def run_analytics():
             WHEN 'television' THEN 'TELEVISION-VIEWS'
         END AS "category-views-videos",
         v.duration_bucket as duration_bucket_views_videos,
-        SUM(v.views) AS total_views-videos,
+        SUM(v.views) AS total_views_videos,
         ROUND(100.0 * SUM(v.views) / SUM(SUM(v.views)) OVER (PARTITION BY c.category), 2) AS pct_views_videos
         FROM videos v
         JOIN channels c ON v.channel_id = c.channel_id
@@ -304,7 +304,7 @@ def run_analytics():
             WHEN 'television' THEN 'TELEVISION-VIDEOS'
         END AS "category-views-videos",
         v.duration_bucket as duration_bucket_views_videos,
-        COUNT(v.video_id) AS total_views-videos,
+        COUNT(v.video_id) AS total_views_videos,
         ROUND(100.0 * COUNT(v.video_id) / SUM(COUNT(v.video_id)) OVER (PARTITION BY c.category), 2) AS pct_views_videos
         FROM videos v
         JOIN channels c ON v.channel_id = c.channel_id
