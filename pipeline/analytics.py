@@ -271,55 +271,55 @@ def run_analytics():
     
     # 12. Views distribution by duration_bucket per segment
     df1 = run_query(conn, """
-    SELECT
-    CASE c.category
-        WHEN 'print'      THEN 'PRINT-VIEWS'
-        WHEN 'web-only'   THEN 'WEB-ONLY-VIEWS'
-        WHEN 'television' THEN 'TELEVISION-VIEWS'
-    END AS "category-views",
-    v.duration_bucket as duration_bucket_views,
-    SUM(v.views) AS total_views,
-    ROUND(100.0 * SUM(v.views) / SUM(SUM(v.views)) OVER (PARTITION BY c.category), 2) AS pct_views
-    FROM videos v
-    JOIN channels c ON v.channel_id = c.channel_id
-    WHERE v.published_at BETWEEN NOW() - INTERVAL '31 days' AND NOW() - INTERVAL '1 day'
-    AND v.content_type NOT IN ('broadcast_archive', 'live_or_premiere')
-    GROUP BY c.category, v.duration_bucket
-    ORDER BY c.category,
-    CASE v.duration_bucket
-        WHEN 'livestream'  THEN 6
-        WHEN '30-60 min'   THEN 5
-        WHEN '15-30 min'   THEN 4
-        WHEN '5-15 min'    THEN 3
-        WHEN '1-5 min'     THEN 2
-        WHEN 'short'       THEN 1
-    END DESC
+        SELECT
+        CASE c.category
+            WHEN 'print'      THEN 'PRINT-VIEWS'
+            WHEN 'web-only'   THEN 'WEB-ONLY-VIEWS'
+            WHEN 'television' THEN 'TELEVISION-VIEWS'
+        END AS "category-views",
+        v.duration_bucket as duration_bucket_views,
+        SUM(v.views) AS total_views,
+        ROUND(100.0 * SUM(v.views) / SUM(SUM(v.views)) OVER (PARTITION BY c.category), 2) AS pct_views
+        FROM videos v
+        JOIN channels c ON v.channel_id = c.channel_id
+        WHERE v.published_at BETWEEN NOW() - INTERVAL '31 days' AND NOW() - INTERVAL '1 day'
+        AND v.content_type NOT IN ('broadcast_archive', 'live_or_premiere')
+        GROUP BY c.category, v.duration_bucket
+        ORDER BY c.category,
+        CASE v.duration_bucket
+            WHEN 'livestream'  THEN 6
+            WHEN '30-60 min'   THEN 5
+            WHEN '15-30 min'   THEN 4
+            WHEN '5-15 min'    THEN 3
+            WHEN '1-5 min'     THEN 2
+            WHEN 'short'       THEN 1
+        END DESC
     """)
 
     df2 = run_query("""
-    SELECT
-    CASE c.category
-        WHEN 'print'      THEN 'PRINT-VIDEOS'
-        WHEN 'web-only'   THEN 'WEB-ONLY-VIDEOS'
-        WHEN 'television' THEN 'TELEVISION-VIDEOS'
-    END AS "category-videos",
-    v.duration_bucket as duration_bucket_videos,
-    COUNT(v.video_id) AS total_videos,
-    ROUND(100.0 * COUNT(v.video_id) / SUM(COUNT(v.video_id)) OVER (PARTITION BY c.category), 2) AS pct_videos
-    FROM videos v
-    JOIN channels c ON v.channel_id = c.channel_id
-    WHERE v.published_at BETWEEN NOW() - INTERVAL '31 days' AND NOW() - INTERVAL '1 day'
-    AND v.content_type NOT IN ('broadcast_archive', 'live_or_premiere')
-    GROUP BY c.category, v.duration_bucket
-    ORDER BY c.category,
-    CASE v.duration_bucket
-        WHEN 'livestream'  THEN 6
-        WHEN '30-60 min'   THEN 5
-        WHEN '15-30 min'   THEN 4
-        WHEN '5-15 min'    THEN 3
-        WHEN '1-5 min'     THEN 2
-        WHEN 'short'       THEN 1
-    END DESC
+        SELECT
+        CASE c.category
+            WHEN 'print'      THEN 'PRINT-VIDEOS'
+            WHEN 'web-only'   THEN 'WEB-ONLY-VIDEOS'
+            WHEN 'television' THEN 'TELEVISION-VIDEOS'
+        END AS "category-videos",
+        v.duration_bucket as duration_bucket_videos,
+        COUNT(v.video_id) AS total_videos,
+        ROUND(100.0 * COUNT(v.video_id) / SUM(COUNT(v.video_id)) OVER (PARTITION BY c.category), 2) AS pct_videos
+        FROM videos v
+        JOIN channels c ON v.channel_id = c.channel_id
+        WHERE v.published_at BETWEEN NOW() - INTERVAL '31 days' AND NOW() - INTERVAL '1 day'
+        AND v.content_type NOT IN ('broadcast_archive', 'live_or_premiere')
+        GROUP BY c.category, v.duration_bucket
+        ORDER BY c.category,
+        CASE v.duration_bucket
+            WHEN 'livestream'  THEN 6
+            WHEN '30-60 min'   THEN 5
+            WHEN '15-30 min'   THEN 4
+            WHEN '5-15 min'    THEN 3
+            WHEN '1-5 min'     THEN 2
+            WHEN 'short'       THEN 1
+        END DESC
     """)
     df=pd.concat([df1, df2], ignore_index=True)
     push(sh, "views_by_duration_segment", df)
