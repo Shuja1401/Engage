@@ -1,8 +1,6 @@
 name: Daily Fetch
 
 on:
-  schedule:
-    - cron: '30 6 * * *'  # 12:00 PM IST (UTC+5:30)
   workflow_dispatch:       # allow manual trigger
 
 jobs:
