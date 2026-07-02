@@ -84,7 +84,7 @@ def run_analytics():
         SELECT v.title, c.name, v.views FROM videos v
         JOIN channels c ON v.channel_id = c.channel_id
         WHERE v.published_at BETWEEN NOW() - INTERVAL '31 days' AND NOW() - INTERVAL '1 day'
-        WHERE v.content_type NOT IN ('broadcast_archive', 'live_or_premiere', 'livestream')
+        AND v.content_type NOT IN ('broadcast_archive', 'live_or_premiere', 'livestream')
         ORDER BY v.views DESC
         LIMIT 5
     """)
