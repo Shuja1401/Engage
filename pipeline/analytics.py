@@ -81,7 +81,8 @@ def run_analytics():
 
     # 3. Top 5 videos across all channels
     df = run_query(conn, """
-        SELECT  '[' || v.title || '](https://www.youtube.com/watch?v=' || v.video_id || ')' AS title, c.name, v.views FROM videos v
+        SELECT  ROW_NUMBER() OVER (ORDER BY v.views DESC) || '. <a href="https://www.youtube.com/watch?v=' 
+            || v.video_id || '">' || v.title || '</a>' AS title, c.name, v.views FROM videos v
         JOIN channels c ON v.channel_id = c.channel_id
         WHERE v.published_at BETWEEN NOW() - INTERVAL '8 days' AND NOW() - INTERVAL '1 day'
         AND v.content_type NOT IN ('broadcast_archive', 'live_or_premiere', 'livestream')
