@@ -86,7 +86,7 @@ def run_analytics():
         WHERE v.published_at BETWEEN NOW() - INTERVAL '8 days' AND NOW() - INTERVAL '1 day'
         AND v.content_type NOT IN ('broadcast_archive', 'live_or_premiere', 'livestream')
         ORDER BY v.views DESC
-        LIMIT 5
+        LIMIT 15
     """)
     df.columns = df.columns.str.upper()
     push(sh, "Top_5_videos", df)
