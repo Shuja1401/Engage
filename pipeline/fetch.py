@@ -85,16 +85,6 @@ def classify_duration_bucket(duration_sec):
     else:
         return "broadcast archive"
 
-def compute_views_per_hour(views, published_at):
-    now       = datetime.now(timezone.utc)
-    published = datetime.fromisoformat(published_at.replace("Z", "+00:00"))
-    hours_live = max((now - published).total_seconds() / 3600, 1)
-    return round(views / hours_live, 4)
-
-
-def compute_engagement_score(likes, comments, views):
-    return round(likes * 1.0 + comments * 0.75 + views * 0.5, 4)
-
 
 # ── fetch logic ────────────────────────────────────────────────────────────────
 
@@ -180,26 +170,17 @@ def batch_insert_snapshots(cur, items, fetched_on):
         likes    = int(stats.get("likeCount",    0))
         comments = int(stats.get("commentCount", 0))
 
-        published_at      = item["snippet"]["publishedAt"]
-        vph               = compute_views_per_hour(views, published_at)
-        eng               = compute_engagement_score(likes, comments, views)
-        interaction_score = round(likes * 1.0 + comments * 2.0, 4)
-        engagement_rate   = round((likes + comments) / views * 100, 6) if views >= 1000 else None
         snapshot_id       = f"{item['id']}_{fetched_on}"
 
         rows.append((
             snapshot_id, item["id"], fetched_on,
             views, likes, comments,
-            vph, eng,
-            interaction_score, engagement_rate
-        ))
+             ))
 
     execute_values(cur, """
         INSERT INTO video_snapshots
             (snapshot_id, video_id, fetched_on,
-             views, likes, comments,
-             views_per_hour, engagement_score,
-             interaction_score, engagement_rate)
+             views, likes, comments)
         VALUES %s
         ON CONFLICT (snapshot_id) DO NOTHING
     """, rows)
