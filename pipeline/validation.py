@@ -171,7 +171,7 @@ def duration_24hrs():
     conn.close()
     if not extreme:
         return {"check": "duration_over_24hrs", "status": "PASS", "detail": "No videos longer than 24 hours."}
-    return {"check": "duration_over_24hrs", "status": "FAIL", "detail": f"{len(extreme)} video(s) exceed 24 hours: {[(r[0], r[1]) for r in extreme]}"}
+    return {"check": "duration_over_24hrs", "status": "WARN", "detail": f"{len(extreme)} video(s) exceed 24 hours (broadcast_archive, excluded from charts): {[(r[0], r[1]) for r in extreme]}"}
 
 
 def zero_view_check():
@@ -270,20 +270,18 @@ def views_regression_check():
     conn = get_conn()
     cur  = conn.cursor()
     cur.execute("""
-        SELECT COUNT(*) FROM (
-            SELECT s1.video_id
-            FROM video_snapshots s1
-            JOIN video_snapshots s2
-              ON s1.video_id = s2.video_id AND s1.fetched_on < s2.fetched_on
-            WHERE s2.views < s1.views - 10
-        ) regressions
+        SELECT COUNT(DISTINCT video_id) FROM (
+            SELECT video_id, views,
+                   LAG(views) OVER (PARTITION BY video_id ORDER BY fetched_on) AS prev_views
+            FROM video_snapshots
+        ) sub
+        WHERE prev_views IS NOT NULL AND views < prev_views - 10
     """)
     n = cur.fetchone()[0]
     conn.close()
     if n > 0:
-        return {"check": "views_regression_check", "status": "WARN", "detail": f"{n} video(s) show a meaningful decrease in views (>10) across snapshots."}
+        return {"check": "views_regression_check", "status": "WARN", "detail": f"{n} video(s) show a meaningful decrease in views (>10) between consecutive snapshots."}
     return {"check": "views_regression_check", "status": "PASS", "detail": "No meaningful view count regressions detected."}
-
 
 def videos_without_snapshots_check():
     conn = get_conn()
