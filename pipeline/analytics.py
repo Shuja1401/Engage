@@ -360,7 +360,7 @@ def run_analytics():
 		WHERE v.published_at BETWEEN NOW() - INTERVAL '31 days' AND NOW() - INTERVAL '1 day'
 	  	AND v.content_type = 'short'
 		GROUP BY c.channel_id, c.name, c.category
-		ORDER BY c.category, short_videos_per_day DESC
+		ORDER BY c.category DESC, short_videos_per_day DESC
 	""")
     df["category"] = df["category"].str.upper()
     push(sh, "short_quant", df)
