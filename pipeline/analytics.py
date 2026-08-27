@@ -355,6 +355,7 @@ def run_analytics():
     conn.close()
     print(f"✓ analytics.py completed at {datetime.now().strftime('%d %b %Y, %I:%M %p')}")
 
+	#13. Number of short videos published per channel. 
     df=run_query("""
 	SELECT c.name, c.category, COUNT(v.video_id) AS short_videos
 	FROM channels c
