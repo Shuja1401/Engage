@@ -355,6 +355,18 @@ def run_analytics():
     conn.close()
     print(f"✓ analytics.py completed at {datetime.now().strftime('%d %b %Y, %I:%M %p')}")
 
+    df=run_query("""
+	SELECT c.name, c.category, COUNT(v.video_id) AS short_videos
+	FROM channels c
+	JOIN videos v ON c.channel_id = v.channel_id
+	WHERE v.published_at BETWEEN NOW() - INTERVAL '31 days' AND NOW() - INTERVAL '1 day'
+  	AND v.content_type = 'short'
+	GROUP BY c.channel_id, c.name, c.category
+	ORDER BY short_videos DESC;
+    """)
+    df["category"] = df["category"].str.upper()
+    push(sh, "short_quant", df)
+
 def run_backup():
     """Copy charts_engage → yesterday_analytics. Run manually after visual check."""
     gc     = get_gspread()
