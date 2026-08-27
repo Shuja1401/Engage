@@ -357,14 +357,14 @@ def run_analytics():
 
 	#13. Number of short videos published per channel. 
     df=run_query(conn, """
-	SELECT c.name, c.category, COUNT(v.video_id) AS short_videos
-	FROM channels c
-	JOIN videos v ON c.channel_id = v.channel_id
-	WHERE v.published_at BETWEEN NOW() - INTERVAL '31 days' AND NOW() - INTERVAL '1 day'
-  	AND v.content_type = 'short'
-	GROUP BY c.channel_id, c.name, c.category
-	ORDER BY short_videos DESC
-    """)
+		SELECT c.name, c.category, COUNT(v.video_id) AS short_videos
+		FROM channels c
+		JOIN videos v ON c.channel_id = v.channel_id
+		WHERE v.published_at BETWEEN NOW() - INTERVAL '31 days' AND NOW() - INTERVAL '1 day'
+	  	AND v.content_type = 'short'
+		GROUP BY c.channel_id, c.name, c.category
+		ORDER BY short_videos DESC
+	""")
     df["category"] = df["category"].str.upper()
     push(sh, "short_quant", df)
 
