@@ -352,11 +352,8 @@ def run_analytics():
     df=pd.concat([df1, df2], ignore_index=True)
     df["category"] = df["category"].str.upper()
     push(sh, "views_by_duration_segment", df)
-    conn.close()
-    print(f"✓ analytics.py completed at {datetime.now().strftime('%d %b %Y, %I:%M %p')}")
-
 	#13. Number of short videos published per channel. 
-    df=run_query(conn, """
+    df= run_query ( conn, """
 		SELECT c.name, c.category, COUNT(v.video_id) AS short_videos
 		FROM channels c
 		JOIN videos v ON c.channel_id = v.channel_id
@@ -367,6 +364,10 @@ def run_analytics():
 	""")
     df["category"] = df["category"].str.upper()
     push(sh, "short_quant", df)
+    conn.close()
+    print(f"✓ analytics.py completed at {datetime.now().strftime('%d %b %Y, %I:%M %p')}")
+
+
 
 def run_backup():
     """Copy charts_engage → yesterday_analytics. Run manually after visual check."""
