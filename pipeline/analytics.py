@@ -438,7 +438,7 @@ def run_analytics():
 		shelf_life AS (
 		    SELECT
 		        video_id,
-		        fetched_on - published_at::date AS shelf_life_days
+		        fetched_on::date - published_at::date AS shelf_life_days
 		    FROM threshold_rows
 		    WHERE threshold_rank = 1
 		),
@@ -481,8 +481,15 @@ def run_analytics():
 		GROUP BY shelf_life_category, category_order
 		ORDER BY category_order;
 	""")
-	df["shelf_life_category"] = df["shelf_life_category"].str.upper()
+	df["shelf_life_category"] = (df["shelf_life_category"].str.upper()
+    )
+	print("Shelf-life query completed.")
+    print("Rows returned:", len(df))
+    print(df.head())
+
     push(sh, "shelf_life", df)
+    print("Shelf-life data pushed to Google Sheets.")
+
     conn.close()
     print(f"✓ analytics.py completed at {datetime.now().strftime('%d %b %Y, %I:%M %p')}")
 
