@@ -509,7 +509,6 @@ def run_analytics():
 		ORDER BY category_order;
 	""")
 	df["shelf_life_category"] = (df["shelf_life_category"].str.upper()
-    )
 	print("Shelf-life query completed.")
     print("Rows returned:", len(df))
     print(df.head())
