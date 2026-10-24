@@ -75,6 +75,9 @@ def test_shelf_life_upload():
         print("FAILURE: The written value was not read back.")
 
 
+if __name__ == "__main__":
+    test_shelf_life_upload()
+	
 # ── queries ────────────────────────────────────────────────────────────────────
 
 def run_analytics():
