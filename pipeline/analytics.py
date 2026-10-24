@@ -366,7 +366,124 @@ def run_analytics():
     push(sh, "short_quant", df)
     conn.close()
     print(f"✓ analytics.py completed at {datetime.now().strftime('%d %b %Y, %I:%M %p')}")
-
+	#14. Shelf life
+	df = run_query(conn, """		
+		WITH ranked_snapshots AS (
+		    SELECT
+		        vs.video_id,
+		        vs.snapshot_id,
+		        vs.fetched_on,
+		        vs.views,
+		
+		        ROW_NUMBER() OVER (
+		            PARTITION BY vs.video_id
+		            ORDER BY vs.fetched_on DESC, vs.snapshot_id DESC
+		        ) AS latest_rank,
+		
+		        ROW_NUMBER() OVER (
+		            PARTITION BY vs.video_id
+		            ORDER BY vs.fetched_on ASC, vs.snapshot_id ASC
+		        ) AS first_rank
+		
+		    FROM video_snapshots vs
+		),
+		
+		latest_views AS (
+		    SELECT
+		        video_id,
+		        views AS latest_views
+		    FROM ranked_snapshots
+		    WHERE latest_rank = 1
+		),
+		
+		eligible_videos AS (
+		    SELECT
+		        v.video_id,
+		        v.published_at,
+		        lv.latest_views
+		
+		    FROM videos v
+		    JOIN latest_views lv
+		        ON v.video_id = lv.video_id
+		
+		    WHERE v.duration_seconds >= 60
+		      AND v.published_at >= (
+		          SELECT MIN(fetched_on)
+		          FROM video_snapshots
+		      )
+		      AND v.published_at <=
+		          CURRENT_TIMESTAMP - INTERVAL '30 days'
+		      AND lv.latest_views >= 1000
+		),
+		
+		threshold_rows AS (
+		    SELECT
+		        ev.video_id,
+		        ev.published_at,
+		        rs.fetched_on,
+		
+		        ROW_NUMBER() OVER (
+		            PARTITION BY ev.video_id
+		            ORDER BY rs.fetched_on ASC, rs.snapshot_id ASC
+		        ) AS threshold_rank
+		
+		    FROM eligible_videos ev
+		    JOIN ranked_snapshots rs
+		        ON ev.video_id = rs.video_id
+		    JOIN latest_views lv
+		        ON ev.video_id = lv.video_id
+		
+		    WHERE rs.views >= 0.80 * lv.latest_views
+		),
+		
+		shelf_life AS (
+		    SELECT
+		        video_id,
+		        fetched_on - published_at::date AS shelf_life_days
+		    FROM threshold_rows
+		    WHERE threshold_rank = 1
+		),
+		
+		categorised AS (
+		    SELECT
+		        video_id,
+		        shelf_life_days,
+		
+		        CASE
+		            WHEN shelf_life_days <= 1
+		                THEN 'Within 24 hours'
+		            WHEN shelf_life_days <= 3
+		                THEN '2–3 days'
+		            WHEN shelf_life_days <= 7
+		                THEN '4–7 days'
+		            ELSE '7+ days'
+		        END AS shelf_life_category,
+		
+		        CASE
+		            WHEN shelf_life_days <= 1 THEN 1
+		            WHEN shelf_life_days <= 3 THEN 2
+		            WHEN shelf_life_days <= 7 THEN 3
+		            ELSE 4
+		        END AS category_order
+		
+		    FROM shelf_life
+		)
+		
+		SELECT
+		    shelf_life_category,
+		    COUNT(*) AS video_count,
+		    ROUND(
+		        100.0 * COUNT(*) /
+		        SUM(COUNT(*)) OVER (),
+		        2
+		    ) AS percentage
+		
+		FROM categorised
+		GROUP BY shelf_life_category, category_order
+		ORDER BY category_order;
+	""")
+	df["category"] = df["category"].str.upper()
+    push(sh, "shelf_life", df)
 
 
 def run_backup():
