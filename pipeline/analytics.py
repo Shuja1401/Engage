@@ -481,7 +481,7 @@ def run_analytics():
 		GROUP BY shelf_life_category, category_order
 		ORDER BY category_order;
 	""")
-	df["category"] = df["category"].str.upper()
+	df["shelf_life_category"] = df["shelf_life_category"].str.upper()
     push(sh, "shelf_life", df)
     conn.close()
     print(f"✓ analytics.py completed at {datetime.now().strftime('%d %b %Y, %I:%M %p')}")
