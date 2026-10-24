@@ -51,6 +51,30 @@ def push(sh, worksheet_name, df, sleep=2):
 def run_query(conn, query):
     return pd.read_sql(query, conn)
 
+
+
+def test_shelf_life_upload():
+    print("1. Connecting to Google Sheets...")
+    gc = get_gspread()
+    sh = gc.open("charts_engage")
+
+    print("2. Opening shelf_life worksheet...")
+    ws = sh.worksheet("shelf_life")
+    print("Worksheet found:", ws.title)
+
+    print("3. Writing a test cell...")
+    ws.update([["DIAGNOSTIC TEST"]], "A1")
+
+    print("4. Reading the test cell...")
+    result = ws.acell("A1").value
+    print("Value read back:", repr(result))
+
+    if result == "DIAGNOSTIC TEST":
+        print("SUCCESS: Google Sheets write and read both work.")
+    else:
+        print("FAILURE: The written value was not read back.")
+
+
 # ── queries ────────────────────────────────────────────────────────────────────
 
 def run_analytics():
@@ -518,4 +542,4 @@ def run_backup():
 
 
 if __name__ == "__main__":
-    run_analytics()
+    test_shelf_life_upload()
