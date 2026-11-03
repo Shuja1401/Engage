@@ -508,7 +508,7 @@ def run_analytics():
     ORDER BY comment_to_like_ratio DESC;
     """)
     df["category"] = df["category"].str.upper()
-    push(sh, "short_quant", df)
+    push(sh, "comments_to_likes", df)
 
     conn.close()
     print(f"✓ analytics.py completed at {datetime.now().strftime('%d %b %Y, %I:%M %p')}")
