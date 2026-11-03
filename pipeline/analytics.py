@@ -507,7 +507,6 @@ def run_analytics():
     GROUP BY c.channel_id, c.name
     ORDER BY comment_to_like_ratio DESC;
     """)
-    df["category"] = df["category"].str.upper()
     push(sh, "comments_to_likes", df)
 
     conn.close()
