@@ -486,6 +486,29 @@ def run_analytics():
     print(df.head())
     push(sh, "shelf_life", df)
     print("Shelf-life data pushed to Google Sheets.")
+    #15. Comments to likes ratio
+    df = run_query(conn, """
+    SELECT
+    c.name AS channel_name,
+    ROUND(
+        SUM(v.comments)::numeric / NULLIF(SUM(v.likes), 0),
+        3
+    ) AS comment_to_like_ratio
+    FROM videos v
+    JOIN channels c
+    ON v.channel_id = c.channel_id
+    WHERE v.published_at BETWEEN NOW() - INTERVAL '31 days'
+                          AND NOW() - INTERVAL '1 day'
+    AND v.content_type NOT IN (
+      'broadcast_archive',
+      'live_or_premiere',
+      'livestream'
+      )
+    GROUP BY c.channel_id, c.name
+    ORDER BY comment_to_like_ratio DESC;
+    """)
+    df["category"] = df["category"].str.upper()
+    push(sh, "short_quant", df)
 
     conn.close()
     print(f"✓ analytics.py completed at {datetime.now().strftime('%d %b %Y, %I:%M %p')}")
