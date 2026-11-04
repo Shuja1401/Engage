@@ -486,26 +486,26 @@ def run_analytics():
     #15. Comments to likes ratio
     df = run_query(conn, """
     SELECT
-    c.name, c.category,
+    c.name AS channel_name, c.category AS channel_category,
     ROUND(
-        AVG(
-            v.comments::numeric / NULLIF(v.likes, 0)
-        ),
+        AVG((v.likes::numeric / NULLIF(v.views, 0)) * 1000),
         3
-    ) AS avg_comments_to_likes_ratio
+    ) AS likes_per_thousand,
+    ROUND(
+        AVG((v.comments::numeric / NULLIF(v.views, 0)) * 1000),
+        3
+    ) AS comments_per_thousand
     FROM videos v
     JOIN channels c
     ON v.channel_id = c.channel_id
-    WHERE v.published_at BETWEEN NOW() - INTERVAL '31 days'
-                          AND NOW() - INTERVAL '1 day'
+    WHERE v.published_at BETWEEN NOW() - INTERVAL '31 days' AND NOW() - INTERVAL '1 day'
     AND v.content_type NOT IN (
-      'broadcast_archive',
-      'live_or_premiere',
-      'livestream'
-      )
+        'broadcast_archive',
+        'live_or_premiere',
+        'livestream'
+    )
     GROUP BY c.category, c.name
-    ORDER BY category, avg_comments_to_likes_ratio DESC;
-    """)
+    ORDER BY c.category, comments_per_thousand DESC;
     df["category"] = df["category"].str.upper()
     push(sh, "comments_to_likes", df)
 
