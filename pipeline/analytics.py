@@ -506,6 +506,7 @@ def run_analytics():
     GROUP BY c.category, c.name
     ORDER BY category, avg_comments_to_likes_ratio DESC;
     """)
+    df["category"] = df["category"].str.upper()
     push(sh, "comments_to_likes", df)
 
     conn.close()
