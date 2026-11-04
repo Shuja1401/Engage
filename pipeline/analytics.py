@@ -481,19 +481,18 @@ def run_analytics():
         ORDER BY category_order;
     """)
     df["shelf_life_category"] = df["shelf_life_category"].str.upper()
-    print("Shelf-life query completed.")
-    print("Rows returned:", len(df))
-    print(df.head())
     push(sh, "shelf_life", df)
-    print("Shelf-life data pushed to Google Sheets.")
+
     #15. Comments to likes ratio
     df = run_query(conn, """
     SELECT
-    c.name, AS channel_name, c.category AS channel_category,
+    c.name AS channel_name, c.category AS channel_category,
     ROUND(
-        SUM(v.comments)::numeric / NULLIF(SUM(v.likes), 0),
+        AVG(
+            v.comments::numeric / NULLIF(v.likes, 0)
+        ),
         3
-    ) AS comment_to_like_ratio
+    ) AS avg_comments_to_likes_ratio
     FROM videos v
     JOIN channels c
     ON v.channel_id = c.channel_id
@@ -504,7 +503,7 @@ def run_analytics():
       'live_or_premiere',
       'livestream'
       )
-    GROUP BY c.channel_category, c.name
+    GROUP BY c.category, c.name
     ORDER BY comment_to_like_ratio DESC;
     """)
     push(sh, "comments_to_likes", df)
