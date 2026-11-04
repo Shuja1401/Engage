@@ -504,7 +504,7 @@ def run_analytics():
       'livestream'
       )
     GROUP BY c.category, c.name
-    ORDER BY comment_to_like_ratio DESC;
+    ORDER BY category, avg_comments_to_likes_ratio DESC;
     """)
     push(sh, "comments_to_likes", df)
 
