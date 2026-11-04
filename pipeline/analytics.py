@@ -348,7 +348,7 @@ def run_analytics():
             WHEN '1-5 min'     THEN 2
             WHEN 'short'       THEN 1
         END DESC
-    """)
+        """)
     df=pd.concat([df1, df2], ignore_index=True)
     df["category"] = df["category"].str.upper()
     push(sh, "views_by_duration_segment", df)
