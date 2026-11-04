@@ -489,7 +489,7 @@ def run_analytics():
     #15. Comments to likes ratio
     df = run_query(conn, """
     SELECT
-    c.name AS channel_name,
+    c.name, AS channel_name, c.category AS channel_category,
     ROUND(
         SUM(v.comments)::numeric / NULLIF(SUM(v.likes), 0),
         3
@@ -504,7 +504,7 @@ def run_analytics():
       'live_or_premiere',
       'livestream'
       )
-    GROUP BY c.channel_id, c.name
+    GROUP BY c.channel_category, c.name
     ORDER BY comment_to_like_ratio DESC;
     """)
     push(sh, "comments_to_likes", df)
