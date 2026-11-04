@@ -79,7 +79,7 @@ def run_analytics():
     df["category"] = df["category"].str.upper()
     push(sh, "total_views", df)
 
-    # 3. Top 5 videos across all channels
+    # 3. Top 15 videos across all channels
     df = run_query(conn, """
         SELECT  '<a href="https://www.youtube.com/watch?v=' 
             || v.video_id || '">' || v.title || '</a>' AS title, c.name, v.views FROM videos v
@@ -279,7 +279,7 @@ def run_analytics():
         FROM videos v
         JOIN channels c ON v.channel_id = c.channel_id
         WHERE v.published_at BETWEEN NOW() - INTERVAL '31 days' AND NOW() - INTERVAL '1 day'
-        AND v.content_type NOT IN ('broadcast_archive', 'live_or_premiere')
+        AND v.content_type NOT IN ('broadcast_archive', 'live_or_premiere', 'livestream')
         GROUP BY c.name, c.category, v.duration_bucket
         ORDER BY c.category, c.name,
             CASE v.duration_bucket
@@ -310,7 +310,7 @@ def run_analytics():
         FROM videos v
         JOIN channels c ON v.channel_id = c.channel_id
         WHERE v.published_at BETWEEN NOW() - INTERVAL '31 days' AND NOW() - INTERVAL '1 day'
-        AND v.content_type NOT IN ('broadcast_archive', 'live_or_premiere')
+        AND v.content_type NOT IN ('broadcast_archive', 'live_or_premiere', 'livestream')
         GROUP BY c.category, v.duration_bucket
         ORDER BY c.category,
         CASE v.duration_bucket
@@ -506,6 +506,7 @@ def run_analytics():
     )
     GROUP BY c.category, c.name
     ORDER BY c.category, comments_per_thousand DESC;
+    """)
     df["category"] = df["category"].str.upper()
     push(sh, "comments_to_likes", df)
 
@@ -523,7 +524,7 @@ def run_backup():
         "subscribers", "total_views", "Top_5_videos",
         "videos_per_day", "posting_time_of_videos", "duration_of_videos",
         "engagement_score", "vph_vs_volume", "eng_scr_vs_vol",
-        "editorial_effort_web", "editorial_effort_tv", "editorial_effort_print", "views_by_duration_channel", "views_by_duration_segment, short_quant"
+        "editorial_effort_web", "editorial_effort_tv", "editorial_effort_print", "views_by_duration_channel", "views_by_duration_segment", "short_quant","shelf_life","comments_to_likes"
     ]
 
     for tab in tabs:
