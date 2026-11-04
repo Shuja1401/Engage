@@ -514,7 +514,7 @@ def run_analytics():
 
 
 def run_backup():
-    """Copy charts_engage → yesterday_analytics. Run manually after visual check."""
+    """Copy charts_engage TO yesterday_analytics. Run manually after visual check."""
     gc     = get_gspread()
     source = gc.open("charts_engage")
     backup = gc.open("yesterday_analytics")
