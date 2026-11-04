@@ -486,7 +486,7 @@ def run_analytics():
     #15. Comments to likes ratio
     df = run_query(conn, """
     SELECT
-    c.name AS channel_name, c.category AS channel_category,
+    c.name, c.category,
     ROUND(
         AVG(
             v.comments::numeric / NULLIF(v.likes, 0)
